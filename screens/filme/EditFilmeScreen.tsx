@@ -21,7 +21,7 @@ const EditFilmeScreen = ({ route, navigation }: any) => {
       setDataLancamento(filme.data_lancamento || '');
       setDescricao(filme.descricao || '');
       setDuracao(filme.duracao || '');
-      setGeneros(filme.generos_details?.join(', ') || '');
+      setGeneros(filme.generos?.join(', ') || '');
     }
   }, [filme]);
 

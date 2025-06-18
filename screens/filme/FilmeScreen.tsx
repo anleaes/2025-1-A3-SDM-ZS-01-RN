@@ -12,7 +12,7 @@ export type Filme = {
   data_lancamento: string;
   duracao?: string;
   descricao?: string;
-  generos_details: { id: number; nome: string }[];
+  generos: { id: number; nome: string }[];
 };
 
 const FilmeScreen = ({ navigation }: any) => {
@@ -55,7 +55,13 @@ const FilmeScreen = ({ navigation }: any) => {
         <Text style={styles.name}>{item.titulo}</Text>
         <Text style={styles.description}>Diretor: {item.diretor}</Text>
         <Text style={styles.description}>
-          Gêneros: {item.generos_details.map(g => g.nome).join(', ')}
+          Gêneros: {
+            Array.isArray(item.generos) && item.generos.length > 0
+              ? typeof item.generos[0] === 'object'
+                ? item.generos.map(g => g.nome).join(', ')
+                : item.generos.join(', ')
+              : 'Nenhum'
+          }
         </Text>
       </View>
       <View style={styles.cardActions}>
