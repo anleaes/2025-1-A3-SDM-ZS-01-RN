@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
+import { useWindowDimensions } from 'react-native';
 import CustomDrawerContent from '../components/CustomDrawerContent';
 import HomeScreen from '../screens/HomeScreen';
 import GeneroStackNavigator from './GeneroStackNavigator';
@@ -14,16 +15,21 @@ export type DrawerParamList = {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const DrawerNavigator = () => {
+  const dimensions = useWindowDimensions();
+  const isLargeScreen = dimensions.width >= 768;
+
   return (
     <Drawer.Navigator
       initialRouteName="Home"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-        drawerActiveTintColor: '#4B7BE5',
+        drawerType: isLargeScreen ? 'permanent' : 'front',
+        headerStyle: { backgroundColor: '#2c3e50' },
+        headerTintColor: '#fff',
+        headerShown: !isLargeScreen,
+        drawerActiveTintColor: '#3498db',
         drawerLabelStyle: { marginLeft: 0, fontSize: 16 },
         drawerStyle: { backgroundColor: '#fff', width: 250 },
-        headerStyle: { backgroundColor: '#4B7BE5' },
-        headerTintColor: '#fff',
       }}
     >
       <Drawer.Screen
