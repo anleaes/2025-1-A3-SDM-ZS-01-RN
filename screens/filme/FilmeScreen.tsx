@@ -10,6 +10,8 @@ export type Filme = {
   titulo: string;
   diretor: string;
   data_lancamento: string;
+  duracao?: string;
+  descricao?: string;
   generos_details: { id: number; nome: string }[];
 };
 
