@@ -3,15 +3,15 @@ import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } f
 import api from '../../services/api';
 
 const EditGeneroScreen = ({ route, navigation }: any) => {
-  const { genero } = route.params; // 
+  const { genero } = route.params; 
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (genero) {
-      setNome(genero.nome); // 
-      setDescricao(genero.descricao); // 
+      setNome(genero.nome); 
+      setDescricao(genero.descricao); 
     }
   }, [genero]);
 
@@ -22,8 +22,8 @@ const EditGeneroScreen = ({ route, navigation }: any) => {
     }
     setSaving(true);
     try {
-      await api.put(`/generos/${genero.id}/`, { nome, descricao }); // 
-      navigation.navigate('Generos'); // 
+      await api.put(`/generos/${genero.id}/`, { nome, descricao }); 
+      navigation.navigate('Generos');
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível atualizar o gênero. ' + error);
     } finally {
@@ -54,7 +54,7 @@ const EditGeneroScreen = ({ route, navigation }: any) => {
   );
 };
 
-// Estilos... (Reutilize os mesmos estilos de CreateGeneroScreen)
+
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, backgroundColor: '#fff' },
     label: { fontSize: 16, fontWeight: 'bold', marginTop: 12, marginBottom: 4 },

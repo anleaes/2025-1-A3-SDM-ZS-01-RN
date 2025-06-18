@@ -17,26 +17,26 @@ const GeneroScreen = ({ navigation }: any) => {
   const fetchGeneros = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get('/generos/'); // Endpoint da sua API
+      const { data } = await api.get('/generos/');
       setGeneros(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os gêneros.');
+      Alert.alert('Erro', 'Não foi possível carregar os gêneros. ' + error);
     } finally {
       setLoading(false);
     }
   };
 
-  useFocusEffect(useCallback(() => { fetchGeneros(); }, [])); // 
+  useFocusEffect(useCallback(() => { fetchGeneros(); }, [])); 
 
   const handleDelete = async (id: number) => {
     Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este gênero?', [
       { text: 'Cancelar' },
       { text: 'Excluir', onPress: async () => {
           try {
-            await api.delete(`/generos/${id}/`); // 
-            setGeneros(prev => prev.filter(g => g.id !== id)); // 
+            await api.delete(`/generos/${id}/`); 
+            setGeneros(prev => prev.filter(g => g.id !== id)); 
           } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o gênero.');
+            Alert.alert('Erro', 'Não foi possível excluir o gênero. ' + error);
           }
         }, style: 'destructive'
       }
@@ -79,7 +79,7 @@ const GeneroScreen = ({ navigation }: any) => {
   );
 };
 
-// Estilos... (Adicione os estilos abaixo)
+
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#f0f2f5' },
     fab: { position: 'absolute', right: 20, bottom: 20, backgroundColor: '#3498db', width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', elevation: 4 }, // 
