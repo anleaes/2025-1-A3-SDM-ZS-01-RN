@@ -6,6 +6,8 @@ import CustomDrawerContent from '../components/CustomDrawerContent';
 import HomeScreen from '../screens/HomeScreen';
 import FilmeStackNavigator from './FilmeStackNavigator';
 import GeneroStackNavigator from './GeneroStackNavigator';
+import UsuarioStackNavigator from './UsuarioStackNavigator';
+
 
 
 
@@ -13,6 +15,7 @@ export type DrawerParamList = {
   Home: undefined;
   Generos: undefined; 
   Filmes: undefined;
+  Usuarios: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -61,7 +64,16 @@ const DrawerNavigator = () => {
           title: 'Filmes',
           drawerIcon: ({ color, size }) => <Ionicons name="videocam-outline" size={size} color={color} />,
         }}
-      />       
+      />
+
+      <Drawer.Screen
+        name="Usuarios"
+        component={UsuarioStackNavigator} 
+        options={{
+          title: 'Usuários',
+          drawerIcon: ({ color, size }) => <Ionicons name="people-outline" size={size} color={color} />,
+        }}
+      />          
     </Drawer.Navigator>  
   );
 };
