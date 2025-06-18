@@ -5,9 +5,9 @@ import CustomDrawerContent from '../components/CustomDrawerContent';
 import CategoriesScreen, { Category } from '../screens/CategoriesScreen';
 import CreateCategoryScreen from '../screens/CreateCategoryScreen';
 import EditCategoryScreen from '../screens/EditCategoryScreen';
-import GeneroScreen from '../screens/genero/GeneroScreen';
 import HomeScreen from '../screens/HomeScreen';
 import SocialnetworksScreen from '../screens/SocialnetworksScreen';
+import GeneroStackNavigator from './GeneroStackNavigator';
 
 
 export type DrawerParamList = {
@@ -15,7 +15,7 @@ export type DrawerParamList = {
   Categories: undefined;
   CreateCategory: undefined; 
   EditCategory: { category: Category };
-  Genero: undefined;
+  Generos: undefined;
   Socialnetworks: undefined;  
 };
 
@@ -61,11 +61,11 @@ const DrawerNavigator = () => {
         options={{ drawerItemStyle: { display: 'none' }, title: 'Editar categoria' }}
       />
       <Drawer.Screen
-        name="Genero"
-        component={GeneroScreen}
+        name="Generos"
+        component={GeneroStackNavigator} // Use o StackNavigator aqui
         options={{
-          drawerIcon: ({ color, size }) => <Ionicons name="cart" size={size} color={color} />,
-          title: 'Genero',
+          title: 'Gêneros',
+          drawerIcon: ({ color, size }) => <Ionicons name="film-outline" size={size} color={color} />,
         }}
       />
       <Drawer.Screen
