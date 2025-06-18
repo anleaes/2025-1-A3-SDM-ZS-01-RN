@@ -42,6 +42,14 @@ const EditGeneroScreen = ({ route, navigation }: any) => {
       ) : (
         <Button title="Atualizar" onPress={handleSave} color="#3498db" />
       )}
+      <View style={{ marginTop: 10 }}>
+        <Button
+          title="Voltar"
+          onPress={() => navigation.goBack()}
+          color="#888"
+          disabled={saving}
+        />
+      </View>
     </View>
   );
 };
