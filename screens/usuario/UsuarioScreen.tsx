@@ -83,11 +83,10 @@ const UsuarioScreen = ({ navigation }: any) => {
   );
 };
 
-// Adapte os estilos conforme o seu tema
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#121212' },
+    container: { flex: 1, backgroundColor: '#1c1c1e' },
     fab: { position: 'absolute', right: 20, bottom: 20, backgroundColor: '#3498db', width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', elevation: 4 },
-    card: { backgroundColor: '#1e1e1e', marginVertical: 8, marginHorizontal: 16, borderRadius: 8, padding: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', elevation: 2, borderWidth: 1, borderColor: '#333' },
+    card: { backgroundColor: '#2c2c2e', marginVertical: 8, marginHorizontal: 16, borderRadius: 8, padding: 16, flexDirection: 'row',  justifyContent: 'space-between', alignItems: 'center' },
     cardContent: { flex: 1 },
     name: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
     details: { fontSize: 14, color: '#aaa', marginTop: 4 },
