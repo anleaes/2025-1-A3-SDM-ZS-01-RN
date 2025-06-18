@@ -1,4 +1,3 @@
-// src/screens/sessao/SessaoScreen.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
@@ -7,10 +6,10 @@ import api from '../../services/api';
 
 export type Sessao = {
   id: number;
-  filme: string; // Assumindo que a API retorna o nome do filme (StringRelatedField)
-  filme_id?: number; // Opcional, se a API também retornar o ID
+  filme: string;
+  filme_id?: number; 
   sala: number;
-  horario: string; // Formato: "2025-06-18T20:00:00Z"
+  horario: string;
   is_active: boolean;
 };
 
@@ -47,7 +46,7 @@ const SessaoScreen = ({ navigation }: any) => {
     ]);
   };
 
-  // Função para formatar a data e hora
+ 
   const formatDateTime = (datetime: string) => {
     const date = new Date(datetime);
     return date.toLocaleString('pt-BR', {
