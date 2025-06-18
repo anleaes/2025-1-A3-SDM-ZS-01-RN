@@ -4,12 +4,15 @@ import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import CustomDrawerContent from '../components/CustomDrawerContent';
 import HomeScreen from '../screens/HomeScreen';
+import FilmeStackNavigator from './FilmeStackNavigator';
 import GeneroStackNavigator from './GeneroStackNavigator';
+
 
 
 export type DrawerParamList = {
   Home: undefined;
   Generos: undefined; 
+  Filmes: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -24,12 +27,13 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerType: isLargeScreen ? 'permanent' : 'front',
-        headerStyle: { backgroundColor: '#2c3e50' },
+        headerStyle: { backgroundColor: '#1c1c1e' },
         headerTintColor: '#fff',
         headerShown: !isLargeScreen,
         drawerActiveTintColor: '#3498db',
-        drawerLabelStyle: { marginLeft: 0, fontSize: 16 },
-        drawerStyle: { backgroundColor: '#fff', width: 250 },
+        drawerLabelStyle: { marginLeft: 0, fontSize: 16, color: '#fff' },
+        drawerStyle: { backgroundColor: '#18181a', width: 250 }, 
+        drawerContentStyle: { backgroundColor: '#18181a' },
       }}
     >
       <Drawer.Screen
@@ -43,12 +47,21 @@ const DrawerNavigator = () => {
       
       <Drawer.Screen
         name="Generos"
-        component={GeneroStackNavigator} // Use o StackNavigator aqui
+        component={GeneroStackNavigator} 
         options={{
           title: 'Gêneros',
           drawerIcon: ({ color, size }) => <Ionicons name="film-outline" size={size} color={color} />,
         }}
-      />    
+      />
+
+      <Drawer.Screen
+        name="Filmes"
+        component={FilmeStackNavigator} 
+        options={{
+          title: 'Filmes',
+          drawerIcon: ({ color, size }) => <Ionicons name="videocam-outline" size={size} color={color} />,
+        }}
+      />       
     </Drawer.Navigator>  
   );
 };
