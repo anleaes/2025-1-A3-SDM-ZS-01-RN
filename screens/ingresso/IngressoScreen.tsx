@@ -1,3 +1,4 @@
+
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
@@ -5,12 +6,12 @@ import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity,
 import api from '../../services/api';
 
 export type Ingresso = {
-  codigo: string; 
+  codigo: number;
   preco: string;
-  sessao: string; 
-  cadeira: string;
-  sessao_id?: number;
-  cadeira_id?: number;
+  sessao: number;
+  cadeira: number; 
+  sessao_details: string;  
+  cadeira_details: string; 
 };
 
 const IngressoScreen = ({ navigation }: any) => {
@@ -31,30 +32,34 @@ const IngressoScreen = ({ navigation }: any) => {
 
   useFocusEffect(useCallback(() => { fetchIngressos(); }, []));
 
-  const handleDelete = (codigo: string) => {
+  const handleDelete = (codigo: number) => {
     Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este ingresso?', [
       { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
+      {
+        text: 'Excluir',
+        onPress: async () => {
           try {
             await api.delete(`/ingressos/${codigo}/`);
             setIngressos(prev => prev.filter(i => i.codigo !== codigo));
           } catch (error) {
             Alert.alert('Erro', 'Não foi possível excluir o ingresso. ' + error);
           }
-        }, style: 'destructive'
-      }
+        },
+        style: 'destructive',
+      },
     ]);
   };
 
   const renderItem = ({ item }: { item: Ingresso }) => (
     <View style={styles.card}>
       <View style={styles.cardContent}>
-        <Text style={styles.name}>Ingresso: {item.codigo.substring(0, 8)}...</Text>
-        <Text style={styles.details}>{item.sessao}</Text>
-        <Text style={styles.details}>Assento: {item.cadeira}</Text>
+        <Text style={styles.name}>Ingresso Cód: {item.codigo}</Text>
+        <Text style={styles.details}>{item.sessao_details}</Text>
+        <Text style={styles.details}>Assento: {item.cadeira_details}</Text>
         <Text style={styles.price}>Preço: R$ {item.preco}</Text>
       </View>
       <View style={styles.cardActions}>
+
         <TouchableOpacity onPress={() => navigation.navigate('EditIngresso', { ingresso: item })}>
           <Ionicons name="pencil" size={24} color="#3498db" />
         </TouchableOpacity>
@@ -72,7 +77,7 @@ const IngressoScreen = ({ navigation }: any) => {
       ) : (
         <FlatList
           data={ingressos}
-          keyExtractor={(item) => item.codigo}
+          keyExtractor={(item) => item.codigo.toString()}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 80 }}
         />
