@@ -23,7 +23,7 @@ const FilmeScreen = ({ navigation }: any) => {
       const { data } = await api.get('/filmes/');
       setFilmes(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os filmes.');
+      Alert.alert('Erro', 'Não foi possível carregar os filmes.' + error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const FilmeScreen = ({ navigation }: any) => {
             await api.delete(`/filmes/${id}/`);
             setFilmes(prev => prev.filter(f => f.id !== id));
           } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o filme.');
+            Alert.alert('Erro', 'Não foi possível excluir o filme. ' + error);
           }
         }, style: 'destructive'
       }
