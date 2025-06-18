@@ -37,11 +37,29 @@ const CreateGeneroScreen = ({ navigation }: any) => {
     </View>
   );
 };
-// Estilos... (Adicione os estilos abaixo)
+
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-    label: { fontSize: 16, fontWeight: 'bold', marginTop: 12, marginBottom: 4 },
-    input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, fontSize: 16, marginBottom: 12 }, // 
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#1c1c1e' // 1. Fundo escuro para combinar com o tema
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 12,
+        marginBottom: 4,
+        color: '#FFFFFF' // 2. Cor da label alterada para branco
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#555', // Borda um pouco mais clara para ser visível
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 16,
+        marginBottom: 12,
+        color: '#FFFFFF' // 3. Cor do texto DENTRO do input
+    },
 });
 
 export default CreateGeneroScreen;
