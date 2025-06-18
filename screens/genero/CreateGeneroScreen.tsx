@@ -17,7 +17,7 @@ const CreateGeneroScreen = ({ navigation }: any) => {
       await api.post('/generos/', { nome, descricao }); // 
       navigation.goBack(); // 
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível salvar o gênero.');
+      Alert.alert('Erro', 'Não foi possível salvar o gênero. ' + error);
     } finally {
       setSaving(false);
     }

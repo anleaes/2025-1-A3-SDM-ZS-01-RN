@@ -18,7 +18,7 @@ const EditCategoryScreen = ({ route, navigation }: Props) => {
 
   const handleSave = async () => {
     setSaving(true);
-    const res = await fetch(
+    await fetch(
       `http://localhost:8000/categorias/${category.id}/`,
       {
         method: 'PUT',
