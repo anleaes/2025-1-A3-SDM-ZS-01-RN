@@ -10,6 +10,7 @@ import GeneroStackNavigator from './GeneroStackNavigator';
 export type DrawerParamList = {
   Home: undefined;
   Generos: undefined; 
+  Filmes: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -43,12 +44,21 @@ const DrawerNavigator = () => {
       
       <Drawer.Screen
         name="Generos"
-        component={GeneroStackNavigator} // Use o StackNavigator aqui
+        component={GeneroStackNavigator} 
         options={{
           title: 'Gêneros',
           drawerIcon: ({ color, size }) => <Ionicons name="film-outline" size={size} color={color} />,
         }}
-      />    
+      />
+
+      <Drawer.Screen
+        name="Filmes"
+        component={GeneroStackNavigator} 
+        options={{
+          title: 'Filmes',
+          drawerIcon: ({ color, size }) => <Ionicons name="videocam-outline" size={size} color={color} />,
+        }}
+      />       
     </Drawer.Navigator>  
   );
 };
