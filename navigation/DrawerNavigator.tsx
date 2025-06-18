@@ -4,6 +4,7 @@ import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import CustomDrawerContent from '../components/CustomDrawerContent';
 import HomeScreen from '../screens/HomeScreen';
+import CadeiraStackNavigator from './CadeiraStackNavigator';
 import FilmeStackNavigator from './FilmeStackNavigator';
 import GeneroStackNavigator from './GeneroStackNavigator';
 import UsuarioStackNavigator from './UsuarioStackNavigator';
@@ -16,6 +17,7 @@ export type DrawerParamList = {
   Generos: undefined; 
   Filmes: undefined;
   Usuarios: undefined;
+  Cadeiras: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -72,6 +74,15 @@ const DrawerNavigator = () => {
         options={{
           title: 'Usuários',
           drawerIcon: ({ color, size }) => <Ionicons name="people-outline" size={size} color={color} />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Cadeiras"
+        component={CadeiraStackNavigator} 
+        options={{
+          title: 'Cadeiras',
+          drawerIcon: ({ color, size }) => <Ionicons name="easel-outline" size={size} color={color} />,
         }}
       />          
     </Drawer.Navigator>  
