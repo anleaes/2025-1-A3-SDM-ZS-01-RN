@@ -7,7 +7,9 @@ import HomeScreen from '../screens/HomeScreen';
 import CadeiraStackNavigator from './CadeiraStackNavigator';
 import FilmeStackNavigator from './FilmeStackNavigator';
 import GeneroStackNavigator from './GeneroStackNavigator';
+import SessoesStackNavigator from './SessaoStackNavigator';
 import UsuarioStackNavigator from './UsuarioStackNavigator';
+
 
 
 
@@ -18,6 +20,7 @@ export type DrawerParamList = {
   Filmes: undefined;
   Usuarios: undefined;
   Cadeiras: undefined;
+  Sessoes: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -83,6 +86,15 @@ const DrawerNavigator = () => {
         options={{
           title: 'Cadeiras',
           drawerIcon: ({ color, size }) => <Ionicons name="easel-outline" size={size} color={color} />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Sessoes"
+        component={SessoesStackNavigator} 
+        options={{
+          title: 'Sessoes',
+          drawerIcon: ({ color, size }) => <Ionicons name="time-outline" size={size} color={color} />,
         }}
       />          
     </Drawer.Navigator>  
