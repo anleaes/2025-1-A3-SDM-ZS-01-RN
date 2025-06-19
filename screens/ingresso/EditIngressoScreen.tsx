@@ -35,8 +35,8 @@ const EditIngressoScreen = ({ route, navigation }: any) => {
 
   useEffect(() => {
     if (ingresso) {
-      setSessaoId(ingresso.sessao_id);
-      setCadeiraId(ingresso.cadeira_id);
+      setSessaoId(ingresso.sessao);
+      setCadeiraId(ingresso.cadeira);
       setPreco(ingresso.preco);
     }
   }, [ingresso]);
