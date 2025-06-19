@@ -33,21 +33,17 @@ const IngressoScreen = ({ navigation }: any) => {
   useFocusEffect(useCallback(() => { fetchIngressos(); }, []));
 
   const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este ingresso?', [
-      { text: 'Cancelar' },
-      {
-        text: 'Excluir',
-        onPress: async () => {
-          try {
-            await api.delete(`/ingressos/${id}/`);
-            setIngressos(prev => prev.filter(i => i.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o ingresso. ' + error);
-          }
-        },
-        style: 'destructive',
-      },
-    ]);
+  if (window.confirm('Deseja realmente excluir este ingresso?')) {
+    (async () => {
+      try {
+        await api.delete(`/ingressos/${id}/`);
+        setIngressos(prev => prev.filter(i => i.id !== id));
+        window.alert('Ingresso excluído com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir o ingresso. ' + error);
+      }
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: Ingresso }) => (

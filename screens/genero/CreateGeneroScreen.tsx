@@ -2,12 +2,11 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Button,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from 'react-native';
 import api from '../../services/api';
 
@@ -18,7 +17,7 @@ const CreateGeneroScreen = ({ navigation }: any) => {
 
   const handleSave = async () => {
     if (!nome) {
-      Alert.alert('Erro', 'O nome do gênero é obrigatório.');
+      window.alert('Erro' + ' O nome do gênero é obrigatório.');
       return;
     }
     setSaving(true);
@@ -26,7 +25,7 @@ const CreateGeneroScreen = ({ navigation }: any) => {
       await api.post('/generos/', { nome, descricao });
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível salvar o gênero. ' + error);
+      window.alert('Erro' + 'Não foi possível salvar o gênero. ' + error);
     } finally {
       setSaving(false);
     }

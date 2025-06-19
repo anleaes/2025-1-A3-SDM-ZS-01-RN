@@ -1,6 +1,6 @@
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
 import { Cadeira } from '../cadeira/CadeiraScreen';
 import { Sessao } from '../sessao/SessaoScreen';
@@ -21,7 +21,7 @@ const CreateIngressoScreen = ({ navigation }: any) => {
 
   const handleSave = async () => {
     if (!sessaoId || !cadeiraId || !preco) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      window.alert('Erro' + 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -40,12 +40,11 @@ const CreateIngressoScreen = ({ navigation }: any) => {
         const errorMessages = Object.entries(error.response.data)
           .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
           .join('\n');
-        Alert.alert('Erro de Validação', errorMessages);
+        window.alert('Erro de Validação ' + errorMessages);
     } else {
-        // Mensagem genérica se não houver detalhes
-        Alert.alert('Erro', 'Não foi possível salvar o ingresso.');
+        window.alert('Erro ' + 'Não foi possível salvar o ingresso.');
     }
-    console.error("DETALHES DO ERRO:", JSON.stringify(error.response?.data, null, 2));
+    console.error("DETALHES DO ERRO: ", JSON.stringify(error.response?.data, null, 2));
     } finally {
       setSaving(false);
     }
