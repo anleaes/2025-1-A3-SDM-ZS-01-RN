@@ -10,7 +10,7 @@ export type Usuario = {
   nome: string;
   email: string;
   cpf: string;
-  data_nascimento: string;
+  telefone: string;
 };
 
 const UsuarioScreen = ({ navigation }: any) => {
@@ -51,10 +51,10 @@ const UsuarioScreen = ({ navigation }: any) => {
       <View style={styles.cardContent}>
         <Text style={styles.name}>{item.nome}</Text>
         <Text style={styles.details}>{item.email}</Text>
-        <Text style={styles.details}>CPF: {item.cpf}</Text>
+        <Text style={styles.details}>Telefone: {item.telefone}</Text>
       </View>
       <View style={styles.cardActions}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditUsuario', { usuario: item })}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditUsuario', { usuarioId: item.id })}>
           <Ionicons name="pencil" size={24} color="#3498db" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleDelete(item.id)}>

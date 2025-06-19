@@ -9,6 +9,7 @@ const CreateItemCompraScreen = ({ navigation }: any) => {
   const [compraId, setCompraId] = useState<number>();
   const [ingressoId, setIngressoId] = useState<number>();
   const [precoUnitario, setPrecoUnitario] = useState('');
+  const [quantidade, setQuantidade] = useState('1');
 
   const [allCompras, setAllCompras] = useState<Compra[]>([]);
   const [allIngressos, setAllIngressos] = useState<Ingresso[]>([]);
@@ -20,16 +21,21 @@ const CreateItemCompraScreen = ({ navigation }: any) => {
   }, []);
 
   const handleSave = async () => {
-    if (!compraId || !ingressoId || !precoUnitario) {
+    if (!compraId || !ingressoId || !precoUnitario || !quantidade) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
     
-    const itemData = { compra: compraId, ingresso: ingressoId, preco_unitario: precoUnitario };
+    const itemData = { 
+      compra: compraId, 
+      ingresso: ingressoId, 
+      preco_unitario: precoUnitario,
+      quantidade: parseInt(quantidade)
+    };
 
     try {
-      await api.post('/itemcompras/', itemData);
+      await api.post('/itens_compra/', itemData);
       navigation.goBack();
     } catch (error: any) {
       const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível salvar o item.';
@@ -54,10 +60,13 @@ const CreateItemCompraScreen = ({ navigation }: any) => {
         <Picker selectedValue={ingressoId} onValueChange={setIngressoId} style={styles.picker} dropdownIconColor="#fff">
           <Picker.Item label="Selecione o ingresso..." value={undefined} />
           {allIngressos.map(ing => (
-            <Picker.Item key={ing.codigo} label={`Ingresso Cód: ${ing.codigo}`} value={ing.codigo} />
+            <Picker.Item key={ing.id} label={`Ingresso Cód: ${ing.id}`} value={ing.id} />
           ))}
         </Picker>
       </View>
+
+      <Text style={styles.label}>Quantidade</Text>
+      <TextInput style={styles.input} value={quantidade} onChangeText={setQuantidade} placeholder="1" placeholderTextColor="#999" keyboardType="numeric" />
       
       <Text style={styles.label}>Preço Unitário</Text>
       <TextInput style={styles.input} value={precoUnitario} onChangeText={setPrecoUnitario} placeholder="Ex: 30.50" placeholderTextColor="#999" keyboardType="decimal-pad" />

@@ -1,111 +1,149 @@
-import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import api from '../../services/api';
 
-export type Sessao = {
+type Filme = {
   id: number;
-  filme: string;
-  filme_id?: number; 
-  sala: number;
-  horario: string;
-  is_active: boolean;
+  titulo: string;
 };
 
-const SessaoScreen = ({ navigation }: any) => {
-  const [sessoes, setSessoes] = useState<Sessao[]>([]);
-  const [loading, setLoading] = useState(true);
+const CreateSessaoScreen = ({ navigation }: any) => {
+  const [filmeId, setFilmeId] = useState<number | undefined>();
+  const [sala, setSala] = useState('');
+  const [horario, setHorario] = useState(new Date());
+  const [showPicker, setShowPicker] = useState(false);
+  const [isActive, setIsActive] = useState(true);
+  
+  const [allFilmes, setAllFilmes] = useState<Filme[]>([]);
+  const [loading, setLoading] = useState(true); 
+  const [saving, setSaving] = useState(false);
 
-  const fetchSessoes = async () => {
+  useEffect(() => {
+    const fetchPrerequisites = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/filmes/');
+        setAllFilmes(response.data);
+      } catch (error) {
+        Alert.alert(
+          'Erro ao Carregar Dados',
+          'Não foi possível buscar a lista de filmes para criar a sessão. Verifique sua API e tente novamente.' + error,
+          [{ text: 'OK', onPress: () => navigation.goBack() }] 
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchPrerequisites();
+  }, [navigation]);
+
+  const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    const currentDate = selectedDate || horario;
+    setShowPicker(Platform.OS === 'ios');
+    setHorario(currentDate);
+  };
+
+  const handleSave = async () => {
+    if (!filmeId || !sala) {
+      Alert.alert('Erro', 'Filme e Sala são obrigatórios.');
+      return;
+    }
+    setSaving(true);
+    
+    const sessaoData = {
+      filme: filmeId,
+      sala: parseInt(sala, 10),
+      horario: horario.toISOString(),
+      is_active: isActive,
+    };
+
     try {
-      setLoading(true);
-      const { data } = await api.get('/sessoes/');
-      setSessoes(data);
+      await api.post('/sessoes/', sessaoData);
+      navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar as sessões. ' + error);
+      Alert.alert('Erro', 'Não foi possível salvar a sessão.' + error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  useFocusEffect(useCallback(() => { fetchSessoes(); }, []));
-
-  const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir esta sessão?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/sessoes/${id}/`);
-            setSessoes(prev => prev.filter(s => s.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir a sessão. ' + error);
-          }
-        }, style: 'destructive'
-      }
-    ]);
-  };
-
- 
-  const formatDateTime = (datetime: string) => {
-    const date = new Date(datetime);
-    return date.toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const renderItem = ({ item }: { item: Sessao }) => (
-    <View style={[styles.card, !item.is_active && styles.cardInactive]}>
-      <View style={styles.cardContent}>
-        <Text style={styles.name}>{item.filme}</Text>
-        <Text style={styles.details}>Sala {item.sala} - {formatDateTime(item.horario)}</Text>
-        <Text style={[styles.details, { color: item.is_active ? '#2ecc71' : '#e74c3c' }]}>
-          {item.is_active ? 'Ativa' : 'Inativa'}
-        </Text>
-      </View>
-      <View style={styles.cardActions}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditSessao', { sessao: item })}>
-          <Ionicons name="pencil" size={24} color="#3498db" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleDelete(item.id)}>
-          <Ionicons name="trash" size={24} color="#e74c3c" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+  if (loading) {
+    return <ActivityIndicator size="large" color="#3498db" style={styles.loader} />;
+  }
 
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#3498db" style={{ flex: 1 }} />
-      ) : (
-        <FlatList
-          data={sessoes}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 80 }}
+    <ScrollView style={styles.container}>
+      <Text style={styles.label}>Filme</Text>
+      <View style={styles.pickerContainer}>
+        <Picker selectedValue={filmeId} onValueChange={(itemValue) => setFilmeId(itemValue)} style={styles.picker} dropdownIconColor="#fff">
+          <Picker.Item label="Selecione um filme..." value={undefined} />
+          {allFilmes.map(filme => (
+            <Picker.Item key={filme.id} label={filme.titulo} value={filme.id} />
+          ))}
+        </Picker>
+      </View>
+      
+      <Text style={styles.label}>Sala</Text>
+      <TextInput style={styles.input} value={sala} onChangeText={setSala} placeholder="Número da Sala" placeholderTextColor="#999" keyboardType="numeric" />
+
+      <Text style={styles.label}>Horário</Text>
+      <Button onPress={() => setShowPicker(true)} title="Selecionar Data e Hora" color="#555" />
+      {showPicker && (
+        <DateTimePicker
+          value={horario}
+          mode="datetime"
+          {...(Platform.OS === 'android' && { is24Hour: true })}
+          display="default"
+          onChange={onDateChange}
         />
       )}
-      <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('CreateSessao')}>
-        <Ionicons name="add" size={28} color="#fff" />
-      </TouchableOpacity>
-    </View>
+      <Text style={styles.dateText}>Selecionado: {horario.toLocaleString('pt-BR')}</Text>
+
+      <View style={styles.switchContainer}>
+          <Text style={styles.label}>Sessão Ativa</Text>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={isActive ? '#3498db' : '#f4f3f4'}
+            onValueChange={setIsActive}
+            value={isActive}
+          />
+      </View>
+      
+      <View style={styles.buttonContainer}>
+        {!saving && <Button title="Salvar" onPress={handleSave} color="#3498db" />}
+        {saving && <ActivityIndicator size="large" color="#3498db" />}
+        <View style={{ marginTop: 10 }}>
+          <Button title="Voltar" onPress={() => navigation.goBack()} color="#888" disabled={saving}/>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#121212' },
-    fab: { position: 'absolute', right: 20, bottom: 20, backgroundColor: '#3498db', width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center', elevation: 4 },
-    card: { backgroundColor: '#1e1e1e', marginVertical: 8, marginHorizontal: 16, borderRadius: 8, padding: 16, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', elevation: 2, borderWidth: 1, borderColor: '#333' },
-    cardInactive: { borderColor: '#e74c3c', opacity: 0.7 },
-    cardContent: { flex: 1 },
-    name: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
-    details: { fontSize: 14, color: '#aaa', marginTop: 4 },
-    cardActions: { flexDirection: 'row', gap: 16 }
+    container: { flex: 1, padding: 16, backgroundColor: '#1c1c1e' },
+    loader: { flex: 1, justifyContent: 'center', backgroundColor: '#121212' },
+    label: { fontSize: 16, fontWeight: 'bold', marginTop: 12, marginBottom: 4, color: '#FFFFFF' },
+    input: { borderWidth: 1, borderColor: '#555', borderRadius: 8, padding: 12, fontSize: 16, color: '#FFFFFF', marginBottom: 12 },
+    buttonContainer: { marginTop: 20, marginBottom: 40 },
+    pickerContainer: { borderColor: '#555', borderWidth: 1, borderRadius: 8, marginBottom: 12, },
+    picker: { color: '#fff', height: 50, },
+    switchContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 },
+    dateText: { color: '#fff', marginTop: 10, fontSize: 16 }
 });
 
-export default SessaoScreen;
+export default CreateSessaoScreen;

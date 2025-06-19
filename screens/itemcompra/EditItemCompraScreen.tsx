@@ -1,14 +1,14 @@
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Button,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import api from '../../services/api';
 import { Compra } from '../compra/CompraScreen';
@@ -23,24 +23,23 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
   const [allIngressos, setAllIngressos] = useState<Ingresso[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [quantidade, setQuantidade] = useState('');
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
         const [itemRes, comprasRes, ingressosRes] = await Promise.all([
-          api.get(`/itemcompras/${itemCompraId}/`),
+          api.get(`/itens_compra/${itemCompraId}/`),
           api.get('/compras/'),
           api.get('/ingressos/'),
         ]);
-
         const itemData = itemRes.data;
-
 
         setCompraId(itemData.compra);
         setIngressoId(itemData.ingresso);
         setPrecoUnitario(itemData.preco_unitario);
-
+        setQuantidade(String(itemRes.data.quantidade));
 
         setAllCompras(comprasRes.data);
         setAllIngressos(ingressosRes.data);
@@ -56,7 +55,7 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
   }, [itemCompraId, navigation]);
 
   const handleSave = async () => {
-    if (!compraId || !ingressoId || !precoUnitario) {
+    if (!compraId || !ingressoId || !precoUnitario || !quantidade) {
       Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
     }
@@ -66,10 +65,11 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
       compra: compraId,
       ingresso: ingressoId,
       preco_unitario: precoUnitario,
+      quantidade: parseInt(quantidade)
     };
 
     try {
-      await api.put(`/itemcompras/${itemCompraId}/`, itemData);
+      await api.put(`/itens_compra/${itemCompraId}/`, itemData);
       navigation.goBack();
     } catch (error: any) {
       const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível atualizar o item.';
@@ -98,10 +98,13 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
       <View style={styles.pickerContainer}>
         <Picker selectedValue={ingressoId} onValueChange={setIngressoId} style={styles.picker} dropdownIconColor="#fff">
           {allIngressos.map(ing => (
-            <Picker.Item key={ing.codigo} label={`Ingresso Cód: ${ing.codigo}`} value={ing.codigo} />
+            <Picker.Item key={ing.id} label={`Ingresso Cód: ${ing.id}`} value={ing.id} />
           ))}
         </Picker>
       </View>
+
+      <Text style={styles.label}>Quantidade</Text>
+      <TextInput style={styles.input} value={quantidade} onChangeText={setQuantidade} keyboardType="numeric" />
       
       <Text style={styles.label}>Preço Unitário</Text>
       <TextInput style={styles.input} value={precoUnitario} onChangeText={setPrecoUnitario} placeholder="Ex: 30.50" placeholderTextColor="#999" keyboardType="decimal-pad" />

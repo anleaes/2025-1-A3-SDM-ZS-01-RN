@@ -7,6 +7,7 @@ import api from '../../services/api';
 export type ItemCompra = {
   id: number;
   preco_unitario: string;
+  quantidade: number; 
   compra: number;
   ingresso: number;
   compra_details: string;
@@ -20,7 +21,7 @@ const ItemCompraScreen = ({ navigation }: any) => {
   const fetchItens = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get('/itemcompras/');
+      const { data } = await api.get('/itens_compra/');
       setItens(data);
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível carregar os itens. ' + error);
@@ -36,7 +37,7 @@ const ItemCompraScreen = ({ navigation }: any) => {
       { text: 'Cancelar' },
       { text: 'Excluir', onPress: async () => {
           try {
-            await api.delete(`/itemcompras/${id}/`);
+            await api.delete(`/itens_compra/${id}/`);
             setItens(prev => prev.filter(i => i.id !== id));
           } catch (error) {
             Alert.alert('Erro', 'Não foi possível excluir o item. ' + error);
@@ -51,6 +52,7 @@ const ItemCompraScreen = ({ navigation }: any) => {
       <View style={styles.cardContent}>
         <Text style={styles.name}>Item da {item.compra_details}</Text>
         <Text style={styles.details}>Ingresso: {item.ingresso_details}</Text>
+        <Text style={styles.details}>Quantidade: {item.quantidade}</Text>
         <Text style={styles.price}>Preço Unitário: R$ {item.preco_unitario}</Text>
       </View>
       <View style={styles.cardActions}>
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
     name: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
     details: { fontSize: 14, color: '#aaa', marginTop: 4 },
     price: { fontSize: 14, color: '#2ecc71', marginTop: 8, fontWeight: 'bold' },
-    cardActions: { flexDirection: 'row', gap: 16 }
+    cardActions: { flexDirection: 'row', gap: 16}
 });
 
 export default ItemCompraScreen;
