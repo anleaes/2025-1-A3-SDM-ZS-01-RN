@@ -1,59 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import {
-    ActivityIndicator,
-    Alert,
-    Button,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from 'react-native';
+import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
-import { Usuario } from './UsuarioScreen'; // Importa a tipagem da tela de listagem
 
 const EditUsuarioScreen = ({ route, navigation }: any) => {
-  const { usuario } = route.params as { usuario: Usuario };
+  const { usuarioId } = route.params;
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (usuario) {
-      setNome(usuario.nome);
-      setEmail(usuario.email);
-      setCpf(usuario.cpf);
-      setDataNascimento(usuario.data_nascimento || '');
-    }
-  }, [usuario]);
+    const fetchUsuario = async () => {
+      try {
+        setLoading(true);
+        const { data } = await api.get(`/usuarios/${usuarioId}/`);
+        setNome(data.nome);
+        setEmail(data.email);
+        setCpf(data.cpf);
+        setTelefone(data.telefone);
+      } catch (error) {
+        Alert.alert("Erro", "Não foi possível carregar os dados do usuário. " + error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsuario();
+  }, [usuarioId]);
 
   const handleSave = async () => {
-    if (!nome || !email || !cpf) {
-      Alert.alert('Erro', 'Nome, Email e CPF são obrigatórios.');
+    if (!nome || !email || !cpf || !telefone) {
+      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
-
-    const usuarioData = {
-      nome,
-      email,
-      cpf,
-      data_nascimento: dataNascimento || null,
-    };
+    
+    const usuarioData = { nome, email, cpf, telefone };
 
     try {
-      await api.put(`/usuarios/${usuario.id}/`, usuarioData);
+      await api.put(`/usuarios/${usuarioId}/`, usuarioData);
       navigation.goBack();
-    } catch (error) {
-      console.error("Erro ao editar usuário:", error);
-      Alert.alert('Erro', 'Não foi possível atualizar o usuário.');
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        const errorMessages = Object.entries(error.response.data).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
+        Alert.alert('Erro de Validação', errorMessages);
+      } else {
+        Alert.alert('Erro', 'Não foi possível atualizar o usuário.');
+      }
     } finally {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#3498db" style={{ flex: 1, backgroundColor: '#1c1c1e' }} />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -61,22 +64,19 @@ const EditUsuarioScreen = ({ route, navigation }: any) => {
       <TextInput style={styles.input} value={nome} onChangeText={setNome} />
 
       <Text style={styles.label}>Email</Text>
-      <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" />
+      <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
       
       <Text style={styles.label}>CPF</Text>
       <TextInput style={styles.input} value={cpf} onChangeText={setCpf} keyboardType="numeric" />
 
-      <Text style={styles.label}>Data de Nascimento (Opcional)</Text>
-      <TextInput style={styles.input} value={dataNascimento} onChangeText={setDataNascimento} placeholder="AAAA-MM-DD" placeholderTextColor="#999" />
+      <Text style={styles.label}>Telefone</Text>
+      <TextInput style={styles.input} value={telefone} onChangeText={setTelefone} keyboardType="phone-pad" />
       
       <View style={styles.buttonContainer}>
-        {!saving ? (
-            <Button title="Salvar Alterações" onPress={handleSave} color="#3498db" />
-        ) : (
-            <ActivityIndicator size="large" color="#3498db" />
-        )}
+        {!saving && <Button title="Salvar Alterações" onPress={handleSave} color="#3498db" />}
+        {saving && <ActivityIndicator size="large" color="#3498db" />}
         <View style={{ marginTop: 10 }}>
-            <Button title="Voltar" onPress={() => navigation.goBack()} color="#888" disabled={saving}/>
+          <Button title="Voltar" onPress={() => navigation.goBack()} color="#888" disabled={saving}/>
         </View>
       </View>
     </ScrollView>

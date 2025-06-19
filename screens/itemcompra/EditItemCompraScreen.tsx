@@ -23,24 +23,23 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
   const [allIngressos, setAllIngressos] = useState<Ingresso[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [quantidade, setQuantidade] = useState('');
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
         const [itemRes, comprasRes, ingressosRes] = await Promise.all([
-          api.get(`/itemcompras/${itemCompraId}/`),
+          api.get(`/itens_compra/${itemCompraId}/`),
           api.get('/compras/'),
           api.get('/ingressos/'),
         ]);
-
         const itemData = itemRes.data;
-
 
         setCompraId(itemData.compra);
         setIngressoId(itemData.ingresso);
         setPrecoUnitario(itemData.preco_unitario);
-
+        setQuantidade(String(itemRes.data.quantidade));
 
         setAllCompras(comprasRes.data);
         setAllIngressos(ingressosRes.data);
@@ -66,10 +65,11 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
       compra: compraId,
       ingresso: ingressoId,
       preco_unitario: precoUnitario,
+      quantidade: parseInt(quantidade)
     };
 
     try {
-      await api.put(`/itemcompras/${itemCompraId}/`, itemData);
+      await api.put(`/itens_compra/${itemCompraId}/`, itemData);
       navigation.goBack();
     } catch (error: any) {
       const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível atualizar o item.';
