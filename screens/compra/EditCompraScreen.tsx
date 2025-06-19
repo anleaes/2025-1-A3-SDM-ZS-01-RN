@@ -4,15 +4,34 @@ import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInp
 import api from '../../services/api';
 import { Usuario } from '../usuario/UsuarioScreen';
 
-const CreateCompraScreen = ({ navigation }: any) => {
+const EditCompraScreen = ({ route, navigation }: any) => {
+  const { compraId } = route.params;
+
   const [usuarioId, setUsuarioId] = useState<number>();
   const [valorTotal, setValorTotal] = useState('');
   const [allUsuarios, setAllUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    api.get('/usuarios/').then(response => setAllUsuarios(response.data));
-  }, []);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [compraRes, usuariosRes] = await Promise.all([
+          api.get(`/compras/${compraId}/`),
+          api.get('/usuarios/')
+        ]);
+        setUsuarioId(compraRes.data.usuario);
+        setValorTotal(compraRes.data.valor_total);
+        setAllUsuarios(usuariosRes.data);
+      } catch (error) {
+        Alert.alert("Erro", "Não foi possível carregar os dados da compra. " + error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [compraId]);
 
   const handleSave = async () => {
     if (!usuarioId || !valorTotal) {
@@ -22,37 +41,39 @@ const CreateCompraScreen = ({ navigation }: any) => {
     setSaving(true);
     
     const compraData = { usuario: usuarioId, valor_total: valorTotal };
-
     try {
-      await api.post('/compras/', compraData);
+      await api.put(`/compras/${compraId}/`, compraData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível criar a compra. ' + error);
+      Alert.alert('Erro', 'Não foi possível atualizar a compra. ' + error);
     } finally {
       setSaving(false);
     }
   };
 
+  if(loading) {
+      return <ActivityIndicator size="large" color="#3498db" style={{flex: 1}}/>
+  }
+
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.label}>Usuário</Text>
-      <View style={styles.pickerContainer}>
-        <Picker selectedValue={usuarioId} onValueChange={setUsuarioId} style={styles.picker} dropdownIconColor="#fff">
-          <Picker.Item label="Selecione um usuário..." value={undefined} />
-          {allUsuarios.map(user => <Picker.Item key={user.id} label={user.nome} value={user.id} /> )}
-        </Picker>
-      </View>
-      
-      <Text style={styles.label}>Valor Total (Manual)</Text>
-      <TextInput style={styles.input} value={valorTotal} onChangeText={setValorTotal} placeholder="Ex: 150.75" placeholderTextColor="#999" keyboardType="decimal-pad" />
-      
-      <View style={styles.buttonContainer}>
-        {!saving && <Button title="Salvar" onPress={handleSave} color="#3498db" />}
-        {saving && <ActivityIndicator size="large" color="#3498db" />}
-        <View style={{ marginTop: 10 }}>
-          <Button title="Voltar" onPress={() => navigation.goBack()} color="#888" disabled={saving}/>
+        <Text style={styles.label}>Usuário</Text>
+        <View style={styles.pickerContainer}>
+            <Picker selectedValue={usuarioId} onValueChange={setUsuarioId} style={styles.picker} dropdownIconColor="#fff">
+                {allUsuarios.map(user => <Picker.Item key={user.id} label={user.nome} value={user.id} /> )}
+            </Picker>
         </View>
-      </View>
+
+        <Text style={styles.label}>Valor Total (Manual)</Text>
+        <TextInput style={styles.input} value={valorTotal} onChangeText={setValorTotal} keyboardType="decimal-pad" />
+
+        <View style={styles.buttonContainer}>
+            {!saving && <Button title="Salvar Alterações" onPress={handleSave} color="#3498db" />}
+            {saving && <ActivityIndicator size="large" color="#3498db" />}
+            <View style={{ marginTop: 10 }}>
+                <Button title="Voltar" onPress={() => navigation.goBack()} color="#888" disabled={saving}/>
+            </View>
+        </View>
     </ScrollView>
   );
 };
@@ -66,4 +87,4 @@ const styles = StyleSheet.create({
     picker: { color: '#fff', height: 50, },
 });
 
-export default CreateCompraScreen;
+export default EditCompraScreen;
