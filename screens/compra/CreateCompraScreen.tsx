@@ -1,6 +1,6 @@
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
 import { Usuario } from '../usuario/UsuarioScreen';
 
@@ -16,7 +16,7 @@ const CreateCompraScreen = ({ navigation }: any) => {
 
   const handleSave = async () => {
     if (!usuarioId || !valorTotal) {
-      Alert.alert('Erro', 'Usuário e Valor Total são obrigatórios. ');
+      window.alert('Erro ' + 'Usuário e Valor Total são obrigatórios. ');
       return;
     }
     setSaving(true);
@@ -27,7 +27,7 @@ const CreateCompraScreen = ({ navigation }: any) => {
       await api.post('/compras/', compraData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível criar a compra. ' + error);
+      window.alert('Erro ' + 'Não foi possível criar a compra. ' + error);
     } finally {
       setSaving(false);
     }

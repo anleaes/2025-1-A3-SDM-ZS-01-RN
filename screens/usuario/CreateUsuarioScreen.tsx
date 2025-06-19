@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
 
 const CreateUsuarioScreen = ({ navigation }: any) => {
@@ -11,12 +11,11 @@ const CreateUsuarioScreen = ({ navigation }: any) => {
 
   const handleSave = async () => {
     if (!nome || !email || !cpf || !telefone) { 
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      window.alert('Erro ' + 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
-    
-    // Enviando o payload correto
+
     const usuarioData = { nome, email, cpf, telefone };
 
     try {
@@ -25,9 +24,9 @@ const CreateUsuarioScreen = ({ navigation }: any) => {
     } catch (error: any) {
       if (error.response && error.response.data) {
         const errorMessages = Object.entries(error.response.data).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
-        Alert.alert('Erro de Validação', errorMessages);
+        window.alert('Erro de Validação ' + errorMessages);
       } else {
-        Alert.alert('Erro', 'Não foi possível salvar o usuário.');
+        window.alert('Erro ' + ' Não foi possível salvar o usuário.');
       }
     } finally {
       setSaving(false);

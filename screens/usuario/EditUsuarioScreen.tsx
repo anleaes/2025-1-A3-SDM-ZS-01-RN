@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
 
 const EditUsuarioScreen = ({ route, navigation }: any) => {
@@ -22,7 +22,7 @@ const EditUsuarioScreen = ({ route, navigation }: any) => {
         setCpf(data.cpf);
         setTelefone(data.telefone);
       } catch (error) {
-        Alert.alert("Erro", "Não foi possível carregar os dados do usuário. " + error);
+        window.alert("Erro " + "Não foi possível carregar os dados do usuário. " + error);
       } finally {
         setLoading(false);
       }
@@ -32,7 +32,7 @@ const EditUsuarioScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!nome || !email || !cpf || !telefone) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      window.alert('Erro ' + 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -44,7 +44,7 @@ const EditUsuarioScreen = ({ route, navigation }: any) => {
       navigation.goBack();
     } catch (error: any) {
       const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível atualizar o usuário.';
-      Alert.alert('Erro', errorMessage);  
+      window.alert('Erro ' + errorMessage);  
     } finally {
       setSaving(false);
     }

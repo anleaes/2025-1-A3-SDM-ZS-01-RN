@@ -3,7 +3,6 @@ import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Button,
   Platform,
   ScrollView,
@@ -38,9 +37,9 @@ const CreateSessaoScreen = ({ navigation }: any) => {
         const response = await api.get('/filmes/');
         setAllFilmes(response.data);
       } catch (error) {
-        Alert.alert(
-          'Erro ao Carregar Dados',
-          'Não foi possível buscar a lista de filmes para criar a sessão. Verifique sua API e tente novamente.' + error,
+        window.alert(
+          'Erro ao Carregar Dados ' +
+          'Não foi possível buscar a lista de filmes para criar a sessão. Verifique sua API e tente novamente. ' + error +
           [{ text: 'OK', onPress: () => navigation.goBack() }] 
         );
       } finally {
@@ -59,7 +58,7 @@ const CreateSessaoScreen = ({ navigation }: any) => {
 
   const handleSave = async () => {
     if (!filmeId || !sala) {
-      Alert.alert('Erro', 'Filme e Sala são obrigatórios.');
+      window.alert('Erro ' + ' Filme e Sala são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -75,7 +74,7 @@ const CreateSessaoScreen = ({ navigation }: any) => {
       await api.post('/sessoes/', sessaoData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível salvar a sessão.' + error);
+      window.alert('Erro ' + 'Não foi possível salvar a sessão.' + error);
     } finally {
       setSaving(false);
     }

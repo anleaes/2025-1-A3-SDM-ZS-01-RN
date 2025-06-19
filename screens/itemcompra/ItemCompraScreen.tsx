@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type ItemCompra = {
@@ -24,7 +24,7 @@ const ItemCompraScreen = ({ navigation }: any) => {
       const { data } = await api.get('/itens_compra/');
       setItens(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os itens. ' + error);
+      window.alert('Erro ' + 'Não foi possível carregar os itens. ' + error);
     } finally {
       setLoading(false);
     }

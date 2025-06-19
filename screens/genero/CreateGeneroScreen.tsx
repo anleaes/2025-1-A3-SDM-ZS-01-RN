@@ -17,7 +17,7 @@ const CreateGeneroScreen = ({ navigation }: any) => {
 
   const handleSave = async () => {
     if (!nome) {
-      window.alert('Erro' + ' O nome do gênero é obrigatório.');
+      window.alert('Erro ' + ' O nome do gênero é obrigatório.');
       return;
     }
     setSaving(true);
@@ -25,7 +25,7 @@ const CreateGeneroScreen = ({ navigation }: any) => {
       await api.post('/generos/', { nome, descricao });
       navigation.goBack();
     } catch (error) {
-      window.alert('Erro' + 'Não foi possível salvar o gênero. ' + error);
+      window.alert('Erro ' + 'Não foi possível salvar o gênero. ' + error);
     } finally {
       setSaving(false);
     }

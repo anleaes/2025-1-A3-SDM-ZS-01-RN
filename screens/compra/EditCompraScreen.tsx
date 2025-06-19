@@ -1,6 +1,6 @@
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
 import { Usuario } from '../usuario/UsuarioScreen';
 
@@ -25,7 +25,7 @@ const EditCompraScreen = ({ route, navigation }: any) => {
         setValorTotal(compraRes.data.valor_total);
         setAllUsuarios(usuariosRes.data);
       } catch (error) {
-        Alert.alert("Erro", "Não foi possível carregar os dados da compra. " + error);
+        window.alert("Erro " + "Não foi possível carregar os dados da compra. " + error);
       } finally {
         setLoading(false);
       }
@@ -35,7 +35,7 @@ const EditCompraScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!usuarioId || !valorTotal) {
-      Alert.alert('Erro', 'Usuário e Valor Total são obrigatórios.');
+      window.alert('Erro ' + 'Usuário e Valor Total são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -45,7 +45,7 @@ const EditCompraScreen = ({ route, navigation }: any) => {
       await api.put(`/compras/${compraId}/`, compraData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível atualizar a compra. ' + error);
+      window.alert('Erro' + 'Não foi possível atualizar a compra. ' + error);
     } finally {
       setSaving(false);
     }

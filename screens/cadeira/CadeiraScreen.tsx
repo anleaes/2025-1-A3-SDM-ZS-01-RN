@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type Cadeira = {
@@ -22,7 +22,7 @@ const CadeiraScreen = ({ navigation }: any) => {
       const { data } = await api.get('/cadeiras/');
       setCadeiras(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar as cadeiras. ' + error);
+      window.alert('Erro ' + 'Não foi possível carregar as cadeiras. ' + error);
     } finally {
       setLoading(false);
     }
@@ -31,18 +31,17 @@ const CadeiraScreen = ({ navigation }: any) => {
   useFocusEffect(useCallback(() => { fetchCadeiras(); }, []));
 
   const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir esta cadeira?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/cadeiras/${id}/`);
-            setCadeiras(prev => prev.filter(c => c.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir a cadeira. ' + error);
-          }
-        }, style: 'destructive'
+  if (window.confirm('Deseja realmente excluir esta Cadeira?')) {
+    (async () => {
+      try {
+        await api.delete(`/cadeiras/${id}/`);
+        setCadeiras(prev => prev.filter(i => i.id !== id));
+        window.alert('Cadeira excluída com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir a Cadeira. ' + error);
       }
-    ]);
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: Cadeira }) => (

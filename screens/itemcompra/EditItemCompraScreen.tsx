@@ -2,7 +2,6 @@ import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Button,
   ScrollView,
   StyleSheet,
@@ -45,7 +44,7 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
         setAllIngressos(ingressosRes.data);
 
       } catch (error) {
-        Alert.alert("Erro", "Não foi possível carregar os dados para edição. " + error);
+        window.alert("Erro " + "Não foi possível carregar os dados para edição. " + error);
         navigation.goBack();
       } finally {
         setLoading(false);
@@ -56,7 +55,7 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!compraId || !ingressoId || !precoUnitario || !quantidade) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      window.alert('Erro ' + 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -73,7 +72,7 @@ const EditItemCompraScreen = ({ route, navigation }: any) => {
       navigation.goBack();
     } catch (error: any) {
       const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível atualizar o item.';
-      Alert.alert('Erro', errorMessage);
+      window.alert('Erro' + errorMessage);
     } finally {
       setSaving(false);
     }

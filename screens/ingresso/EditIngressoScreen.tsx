@@ -3,7 +3,6 @@ import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Button,
   ScrollView,
   StyleSheet,
@@ -43,7 +42,7 @@ const EditIngressoScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!sessaoId || !cadeiraId || !preco) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      window.alert('Erro' + 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -61,7 +60,7 @@ const EditIngressoScreen = ({ route, navigation }: any) => {
       const errorMessage = error.response?.data
         ? JSON.stringify(error.response.data)
         : 'Não foi possível atualizar o ingresso.';
-      Alert.alert('Erro', errorMessage);
+      window.alert('Erro' + errorMessage);
     } finally {
       setSaving(false);
     }
