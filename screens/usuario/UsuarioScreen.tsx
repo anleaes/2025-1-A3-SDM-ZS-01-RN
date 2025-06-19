@@ -54,7 +54,7 @@ const UsuarioScreen = ({ navigation }: any) => {
         <Text style={styles.details}>Telefone: {item.telefone}</Text>
       </View>
       <View style={styles.cardActions}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditUsuario', { usuario: item })}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditUsuario', { usuarioId: item.id })}>
           <Ionicons name="pencil" size={24} color="#3498db" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleDelete(item.id)}>

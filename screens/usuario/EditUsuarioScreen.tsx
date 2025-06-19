@@ -43,12 +43,8 @@ const EditUsuarioScreen = ({ route, navigation }: any) => {
       await api.put(`/usuarios/${usuarioId}/`, usuarioData);
       navigation.goBack();
     } catch (error: any) {
-      if (error.response && error.response.data) {
-        const errorMessages = Object.entries(error.response.data).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
-        Alert.alert('Erro de Validação', errorMessages);
-      } else {
-        Alert.alert('Erro', 'Não foi possível atualizar o usuário.');
-      }
+      const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível atualizar o usuário.';
+      Alert.alert('Erro', errorMessage);  
     } finally {
       setSaving(false);
     }
@@ -58,8 +54,7 @@ const EditUsuarioScreen = ({ route, navigation }: any) => {
     return <ActivityIndicator size="large" color="#3498db" style={{ flex: 1, backgroundColor: '#1c1c1e' }} />;
   }
 
-  return (
-    <ScrollView style={styles.container}>
+  return (    <ScrollView style={styles.container}>
       <Text style={styles.label}>Nome Completo</Text>
       <TextInput style={styles.input} value={nome} onChangeText={setNome} />
 
