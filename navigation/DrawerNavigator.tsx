@@ -9,6 +9,7 @@ import CompraStackNavigator from './CompraStackNavigator';
 import FilmeStackNavigator from './FilmeStackNavigator';
 import GeneroStackNavigator from './GeneroStackNavigator';
 import IngressoStackNavigator from './IngressoStackNavigator';
+import ItemCompraStackNavigator from './ItemCompraStackNavigator';
 import SessoesStackNavigator from './SessaoStackNavigator';
 import UsuarioStackNavigator from './UsuarioStackNavigator';
 
@@ -23,6 +24,7 @@ export type DrawerParamList = {
   Sessoes: undefined;
   Ingressos: undefined;
   Compras: undefined;
+  Itens_de_Compra: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -98,7 +100,8 @@ const DrawerNavigator = () => {
           title: 'Sessoes',
           drawerIcon: ({ color, size }) => <Ionicons name="time-outline" size={size} color={color} />,
         }}
-      />      
+      />
+
       <Drawer.Screen
         name="Ingressos"
         component={IngressoStackNavigator} 
@@ -115,7 +118,16 @@ const DrawerNavigator = () => {
           title: 'Compras',
           drawerIcon: ({ color, size }) => <Ionicons name="ticket-outline" size={size} color={color} />,
         }}
-      />        
+      />
+
+      <Drawer.Screen
+        name="Itens_de_Compra"
+        component={ItemCompraStackNavigator} 
+        options={{
+          title: 'Itens de Compra',
+          drawerIcon: ({ color, size }) => <Ionicons name="ticket-outline" size={size} color={color} />,
+        }}
+      />          
     </Drawer.Navigator>  
   );
 };
