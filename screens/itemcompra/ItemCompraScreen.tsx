@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     name: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
     details: { fontSize: 14, color: '#aaa', marginTop: 4 },
     price: { fontSize: 14, color: '#2ecc71', marginTop: 8, fontWeight: 'bold' },
-    cardActions: { flexDirection: 'row', gap: 16 }
+    cardActions: { flexDirection: 'row', gap: 16}
 });
 
 export default ItemCompraScreen;
