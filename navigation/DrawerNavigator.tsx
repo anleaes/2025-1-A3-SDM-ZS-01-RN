@@ -5,12 +5,12 @@ import { useWindowDimensions } from 'react-native';
 import CustomDrawerContent from '../components/CustomDrawerContent';
 import HomeScreen from '../screens/HomeScreen';
 import CadeiraStackNavigator from './CadeiraStackNavigator';
+import CompraStackNavigator from './CompraStackNavigator';
 import FilmeStackNavigator from './FilmeStackNavigator';
 import GeneroStackNavigator from './GeneroStackNavigator';
 import IngressoStackNavigator from './IngressoStackNavigator';
 import SessoesStackNavigator from './SessaoStackNavigator';
 import UsuarioStackNavigator from './UsuarioStackNavigator';
-
 
 
 
@@ -21,7 +21,8 @@ export type DrawerParamList = {
   Usuarios: undefined;
   Cadeiras: undefined;
   Sessoes: undefined;
-  Ingressos: undefined
+  Ingressos: undefined;
+  Compras: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -103,9 +104,18 @@ const DrawerNavigator = () => {
         component={IngressoStackNavigator} 
         options={{
           title: 'Ingressos',
+          drawerIcon: ({ color, size }) => <Ionicons name="receipt-outline" size={size} color={color} />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Compras"
+        component={CompraStackNavigator} 
+        options={{
+          title: 'Compras',
           drawerIcon: ({ color, size }) => <Ionicons name="ticket-outline" size={size} color={color} />,
         }}
-      />      
+      />        
     </Drawer.Navigator>  
   );
 };
