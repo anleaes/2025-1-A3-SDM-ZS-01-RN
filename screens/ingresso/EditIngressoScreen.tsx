@@ -2,14 +2,14 @@
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Button,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import api from '../../services/api';
 import { Cadeira } from '../cadeira/CadeiraScreen';
@@ -55,7 +55,7 @@ const EditIngressoScreen = ({ route, navigation }: any) => {
     };
 
     try {
-      await api.put(`/ingressos/${ingresso.codigo}/`, ingressoData);
+      await api.put(`/ingressos/${ingresso.id}/`, ingressoData);
       navigation.goBack();
     } catch (error: any) {
       const errorMessage = error.response?.data

@@ -6,7 +6,7 @@ import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity,
 import api from '../../services/api';
 
 export type Ingresso = {
-  codigo: number;
+  id: number;
   preco: string;
   sessao: number;
   cadeira: number; 
@@ -32,15 +32,15 @@ const IngressoScreen = ({ navigation }: any) => {
 
   useFocusEffect(useCallback(() => { fetchIngressos(); }, []));
 
-  const handleDelete = (codigo: number) => {
+  const handleDelete = (id: number) => {
     Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este ingresso?', [
       { text: 'Cancelar' },
       {
         text: 'Excluir',
         onPress: async () => {
           try {
-            await api.delete(`/ingressos/${codigo}/`);
-            setIngressos(prev => prev.filter(i => i.codigo !== codigo));
+            await api.delete(`/ingressos/${id}/`);
+            setIngressos(prev => prev.filter(i => i.id !== id));
           } catch (error) {
             Alert.alert('Erro', 'Não foi possível excluir o ingresso. ' + error);
           }
@@ -53,7 +53,7 @@ const IngressoScreen = ({ navigation }: any) => {
   const renderItem = ({ item }: { item: Ingresso }) => (
     <View style={styles.card}>
       <View style={styles.cardContent}>
-        <Text style={styles.name}>Ingresso Cód: {item.codigo}</Text>
+        <Text style={styles.name}>Ingresso Cód: {item.id}</Text>
         <Text style={styles.details}>{item.sessao_details}</Text>
         <Text style={styles.details}>Assento: {item.cadeira_details}</Text>
         <Text style={styles.price}>Preço: R$ {item.preco}</Text>
@@ -63,7 +63,7 @@ const IngressoScreen = ({ navigation }: any) => {
         <TouchableOpacity onPress={() => navigation.navigate('EditIngresso', { ingresso: item })}>
           <Ionicons name="pencil" size={24} color="#3498db" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleDelete(item.codigo)}>
+        <TouchableOpacity onPress={() => handleDelete(item.id)}>
           <Ionicons name="trash" size={24} color="#e74c3c" />
         </TouchableOpacity>
       </View>
@@ -77,7 +77,7 @@ const IngressoScreen = ({ navigation }: any) => {
       ) : (
         <FlatList
           data={ingressos}
-          keyExtractor={(item) => item.codigo.toString()}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={{ paddingBottom: 80 }}
         />

@@ -36,8 +36,16 @@ const CreateIngressoScreen = ({ navigation }: any) => {
       await api.post('/ingressos/', ingressoData);
       navigation.goBack();
     } catch (error: any) {
-      const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : 'Não foi possível salvar o ingresso. Verifique se o assento já não está ocupado para esta sessão.';
-      Alert.alert('Erro', errorMessage);
+      if (error.response && error.response.data) {
+        const errorMessages = Object.entries(error.response.data)
+          .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+          .join('\n');
+        Alert.alert('Erro de Validação', errorMessages);
+    } else {
+        // Mensagem genérica se não houver detalhes
+        Alert.alert('Erro', 'Não foi possível salvar o ingresso.');
+    }
+    console.error("DETALHES DO ERRO:", JSON.stringify(error.response?.data, null, 2));
     } finally {
       setSaving(false);
     }
