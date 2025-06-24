@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type Compra = {
@@ -22,7 +22,7 @@ const CompraScreen = ({ navigation }: any) => {
       const { data } = await api.get('/compras/');
       setCompras(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar as compras. ' + error);
+      window.alert('Erro ' + 'Não foi possível carregar as compras. ' + error);
     } finally {
       setLoading(false);
     }
@@ -31,18 +31,17 @@ const CompraScreen = ({ navigation }: any) => {
   useFocusEffect(useCallback(() => { fetchCompras(); }, []));
 
   const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir esta compra?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/compras/${id}/`);
-            setCompras(prev => prev.filter(c => c.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir a compra. ' + error);
-          }
-        }, style: 'destructive'
+  if (window.confirm('Deseja realmente excluir esta Compra?')) {
+    (async () => {
+      try {
+        await api.delete(`/compras/${id}/`);
+        setCompras(prev => prev.filter(i => i.id !== id));
+        window.alert('Compra excluída com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir a Compra. ' + error);
       }
-    ]);
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: Compra }) => (

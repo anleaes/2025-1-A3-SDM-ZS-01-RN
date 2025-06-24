@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type Genero = {
@@ -20,7 +20,7 @@ const GeneroScreen = ({ navigation }: any) => {
       const { data } = await api.get('/generos/');
       setGeneros(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os gêneros. ' + error);
+      window.alert('Erro' + 'Não foi possível carregar os gêneros. ' + error);
     } finally {
       setLoading(false);
     }
@@ -28,19 +28,18 @@ const GeneroScreen = ({ navigation }: any) => {
 
   useFocusEffect(useCallback(() => { fetchGeneros(); }, [])); 
 
-  const handleDelete = async (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este gênero?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/generos/${id}/`); 
-            setGeneros(prev => prev.filter(g => g.id !== id)); 
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o gênero. ' + error);
-          }
-        }, style: 'destructive'
+  const handleDelete = (id: number) => {
+  if (window.confirm('Deseja realmente excluir este genero?')) {
+    (async () => {
+      try {
+        await api.delete(`/generos/${id}/`);
+        setGeneros(prev => prev.filter(i => i.id !== id));
+        window.alert('Genero excluído com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir o genero. ' + error);
       }
-    ]);
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: Genero }) => (

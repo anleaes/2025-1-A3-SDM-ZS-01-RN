@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type ItemCompra = {
@@ -24,7 +24,7 @@ const ItemCompraScreen = ({ navigation }: any) => {
       const { data } = await api.get('/itens_compra/');
       setItens(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os itens. ' + error);
+      window.alert('Erro ' + 'Não foi possível carregar os itens. ' + error);
     } finally {
       setLoading(false);
     }
@@ -33,33 +33,34 @@ const ItemCompraScreen = ({ navigation }: any) => {
   useFocusEffect(useCallback(() => { fetchItens(); }, []));
 
   const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este item?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/itens_compra/${id}/`);
-            setItens(prev => prev.filter(i => i.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o item. ' + error);
-          }
-        }, style: 'destructive'
+  if (window.confirm('Deseja realmente excluir este item?')) {
+    (async () => {
+      try {
+        await api.delete(`/itens_compra/${id}/`);
+        setItens(prev => prev.filter(i => i.id !== id));
+        window.alert('Item excluído com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir o item. ' + error);
+        console.error("Delete Error:", error);
       }
-    ]);
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: ItemCompra }) => (
     <View style={styles.card}>
       <View style={styles.cardContent}>
+        <Text style={styles.name}>Item id {item.id}</Text>
         <Text style={styles.name}>Item da {item.compra_details}</Text>
         <Text style={styles.details}>Ingresso: {item.ingresso_details}</Text>
         <Text style={styles.details}>Quantidade: {item.quantidade}</Text>
         <Text style={styles.price}>Preço Unitário: R$ {item.preco_unitario}</Text>
       </View>
       <View style={styles.cardActions}>
-        <TouchableOpacity onPress={() => navigation.navigate('EditItemCompra', { itemCompraId: item.id })}>
+        <TouchableOpacity onPress={() => handleDelete(item.id)}>
           <Ionicons name="pencil" size={24} color="#3498db" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleDelete(item.id)}>
+        <TouchableOpacity onPress={() => navigation.navigate('EditItemCompra', { itemCompraId: item.id })}>
           <Ionicons name="trash" size={24} color="#e74c3c" />
         </TouchableOpacity>
       </View>

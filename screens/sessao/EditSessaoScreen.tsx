@@ -2,20 +2,19 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Button,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Button,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import api from '../../services/api';
 import { Filme } from '../filme/FilmeScreen';
-import { Sessao } from './SessaoScreen';
+import { Sessao } from '../sessao/SessaoScreen';
 
 const EditSessaoScreen = ({ route, navigation }: any) => {
 
@@ -36,7 +35,7 @@ const EditSessaoScreen = ({ route, navigation }: any) => {
     api.get('/filmes/').then(response => {
       setAllFilmes(response.data);
     }).catch(() => {
-      Alert.alert('Erro', 'Não foi possível carregar a lista de filmes. ');
+      window.alert('Erro ' +  ' Não foi possível carregar a lista de filmes. ');
     });
   }, []);
 
@@ -61,7 +60,7 @@ const EditSessaoScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!filmeId || !sala) {
-      Alert.alert('Erro', 'Filme e Sala são obrigatórios.');
+      window.alert('Erro ' + 'Filme e Sala são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -77,7 +76,7 @@ const EditSessaoScreen = ({ route, navigation }: any) => {
       await api.put(`/sessoes/${sessao.id}/`, sessaoData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível atualizar a sessão. ' + error);
+      window.alert('Erro ' + ' Não foi possível atualizar a sessão. ' + error);
     } finally {
       setSaving(false);
     }

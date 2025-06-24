@@ -2,7 +2,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type Filme = {
@@ -25,7 +25,7 @@ const FilmeScreen = ({ navigation }: any) => {
       const { data } = await api.get('/filmes/');
       setFilmes(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os filmes.' + error);
+      window.alert('Erro ' + 'Não foi possível carregar os filmes.' + error);
     } finally {
       setLoading(false);
     }
@@ -34,19 +34,17 @@ const FilmeScreen = ({ navigation }: any) => {
   useFocusEffect(useCallback(() => { fetchFilmes(); }, []));
 
   const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este filme?', [
-      { text: 'Cancelar' },
-      {
-        text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/filmes/${id}/`);
-            setFilmes(prev => prev.filter(f => f.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o filme. ' + error);
-          }
-        }, style: 'destructive'
+  if (window.confirm('Deseja realmente excluir este filme?')) {
+    (async () => {
+      try {
+        await api.delete(`/filmes/${id}/`);
+        setFilmes(prev => prev.filter(i => i.id !== id));
+        window.alert('filme excluído com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir o filme. ' + error);
       }
-    ]);
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: Filme }) => (

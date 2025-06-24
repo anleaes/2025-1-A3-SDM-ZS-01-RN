@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type Sessao = {
@@ -23,7 +23,7 @@ const SessaoScreen = ({ navigation }: any) => {
       const { data } = await api.get('/sessoes/');
       setSessoes(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar as sessões. ' + error);
+      window.alert('Erro ' + ' Não foi possível carregar as sessões. ' + error);
     } finally {
       setLoading(false);
     }
@@ -32,18 +32,17 @@ const SessaoScreen = ({ navigation }: any) => {
   useFocusEffect(useCallback(() => { fetchSessoes(); }, []));
 
   const handleDelete = (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir esta sessão?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/sessoes/${id}/`);
-            setSessoes(prev => prev.filter(s => s.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir a sessão. ' + error);
-          }
-        }, style: 'destructive'
+  if (window.confirm('Deseja realmente excluir esta Sessao?')) {
+    (async () => {
+      try {
+        await api.delete(`/sessoes/${id}/`);
+        setSessoes(prev => prev.filter(i => i.id !== id));
+        window.alert('Sessao excluída com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir a Sessao. ' + error);
       }
-    ]);
+    })();
+  }
   };
 
   const formatDateTime = (datetime: string) => {

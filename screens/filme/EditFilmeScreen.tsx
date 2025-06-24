@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 import { Filme } from './FilmeScreen';
 
@@ -30,7 +30,7 @@ const EditFilmeScreen = ({ route, navigation }: any) => {
         const { data } = await api.get('/generos/');
         setAllGenres(data);
       } catch (error) {
-        Alert.alert('Erro', 'Não foi possível carregar a lista de gêneros. ' + error);
+        window.alert('Erro ' + 'Não foi possível carregar a lista de gêneros. ' + error);
       }
     };
     fetchGenres();
@@ -58,7 +58,7 @@ const EditFilmeScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!titulo || !diretor) {
-      Alert.alert('Erro', 'Título e Diretor são obrigatórios.');
+      window.alert('Erro ' + 'Título e Diretor são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -76,7 +76,7 @@ const EditFilmeScreen = ({ route, navigation }: any) => {
       await api.put(`/filmes/${filme.id}/`, filmeData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível atualizar o filme. ' + error);
+      window.alert('Erro ' + 'Não foi possível atualizar o filme. ' + error);
     } finally {
       setSaving(false);
     }

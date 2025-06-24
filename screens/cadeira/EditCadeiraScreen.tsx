@@ -1,6 +1,6 @@
 import { Picker } from '@react-native-picker/picker';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import api from '../../services/api';
 import { Cadeira } from './CadeiraScreen';
 
@@ -24,7 +24,7 @@ const EditCadeiraScreen = ({ route, navigation }: any) => {
 
   const handleSave = async () => {
     if (!fileira || !numero || !sala) {
-      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      window.alert('Erro' + 'Todos os campos são obrigatórios.');
       return;
     }
     setSaving(true);
@@ -40,7 +40,7 @@ const EditCadeiraScreen = ({ route, navigation }: any) => {
       await api.put(`/cadeiras/${cadeira.id}/`, cadeiraData);
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível atualizar a cadeira. ' + error);
+      window.alert('Erro ' + 'Não foi possível atualizar a cadeira. ' + error);
     } finally {
       setSaving(false);
     }

@@ -2,7 +2,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import api from '../../services/api';
 
 export type Usuario = {
@@ -23,7 +23,7 @@ const UsuarioScreen = ({ navigation }: any) => {
       const { data } = await api.get('/usuarios/');
       setUsuarios(data);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível carregar os usuários. ' + error);
+      window.alert('Erro ' + ' Não foi possível carregar os usuários. ' + error);
     } finally {
       setLoading(false);
     }
@@ -31,19 +31,18 @@ const UsuarioScreen = ({ navigation }: any) => {
 
   useFocusEffect(useCallback(() => { fetchUsuarios(); }, []));
 
-  const handleDelete = async (id: number) => {
-    Alert.alert('Confirmar Exclusão', 'Deseja realmente excluir este usuário?', [
-      { text: 'Cancelar' },
-      { text: 'Excluir', onPress: async () => {
-          try {
-            await api.delete(`/usuarios/${id}/`);
-            setUsuarios(prev => prev.filter(u => u.id !== id));
-          } catch (error) {
-            Alert.alert('Erro', 'Não foi possível excluir o usuário. ' + error);
-          }
-        }, style: 'destructive'
+  const handleDelete = (id: number) => {
+  if (window.confirm('Deseja realmente excluir este Usuario?')) {
+    (async () => {
+      try {
+        await api.delete(`/usuarios/${id}/`);
+        setUsuarios(prev => prev.filter(i => i.id !== id));
+        window.alert('Usuario excluído com sucesso!');
+      } catch (error) {
+        window.alert('Não foi possível excluir o Usuario. ' + error);
       }
-    ]);
+    })();
+  }
   };
 
   const renderItem = ({ item }: { item: Usuario }) => (
